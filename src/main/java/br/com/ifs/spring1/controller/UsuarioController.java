@@ -15,6 +15,7 @@ public class UsuarioController {
     public Object getAll() {
         return usuarioService.getAll();
     }
+
     /*@GetMapping(value = "/byNome/{nome}")
     public Object getByLikeNome(@PathVariable(name = "nome") String nome) {
         return usuarioService.getByNomeLike(nome);
@@ -27,8 +28,8 @@ public class UsuarioController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public Object excluir(@PathVariable(name = "id") Integer perNrId) {
-        usuarioService.excluir(perNrId);
+    public Object excluir(@PathVariable(name = "id") Integer idUsuario) {
+        usuarioService.excluir(idUsuario);
         return "Perfil excluído com sucesso!";
     }
 }
