@@ -28,11 +28,11 @@ public class BandaServiceImpl implements IBandaService {
     }
 
     @Override
-    public void excluir(Integer idBanda, Integer idUsuario) {
+    public void excluir(Integer idBanda, Usuario usuario) {
         Banda banda = bandaRepository.findById(idBanda)
         .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
 
-        if(!banda.getIdResponsavel().equals(idUsuario)){
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
             throw new UnauthorizedAccessException("Usuário não autorizado");
         }
 

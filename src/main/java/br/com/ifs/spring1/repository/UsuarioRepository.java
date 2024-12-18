@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
@@ -31,5 +32,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByPerTxNomeLikeIgnoreCaseAndPerTxStatus(String nome, String status);
 
      */
+
+
+    Optional<Usuario> findByLogin(String login);
 
 }
