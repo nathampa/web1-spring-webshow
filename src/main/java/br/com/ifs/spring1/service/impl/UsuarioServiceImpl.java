@@ -24,6 +24,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }*/
 
     public Usuario cadastrar(Usuario usuario) {
+        boolean loginExiste = usuarioRepository.existsByLogin(usuario.getLogin());
+
+        if (loginExiste){
+            throw new IllegalStateException("O login informado já está em uso.");
+        }
 
         return usuarioRepository.save(usuario);
     }
