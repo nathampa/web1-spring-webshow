@@ -11,5 +11,5 @@ public interface IBandaService {
 
     Banda cadastrar(Banda banda, Usuario usuario);
 
-    void excluir(Integer idBanda, Integer idUsuario);
+    void excluir(Integer idBanda, Usuario usuario);
 }
