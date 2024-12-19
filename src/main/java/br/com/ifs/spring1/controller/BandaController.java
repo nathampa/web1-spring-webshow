@@ -1,6 +1,8 @@
 package br.com.ifs.spring1.controller;
 
 import br.com.ifs.spring1.model.Banda;
+import br.com.ifs.spring1.model.BandaUsuario;
+import br.com.ifs.spring1.model.BandaUsuarioId;
 import br.com.ifs.spring1.model.Usuario;
 import br.com.ifs.spring1.repository.UsuarioRepository;
 import br.com.ifs.spring1.service.IBandaService;
@@ -33,6 +35,19 @@ public class BandaController {
             bandaService.cadastrar(banda, usuario);
 
             return ResponseEntity.ok("Banda cadastrada com sucesso!");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/adicionarUsuario")
+    public Object adicionarUsuario(@RequestBody BandaUsuario bandaUsuario, HttpSession sessao){
+        try {
+            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+
+            bandaService.adicionarUsuario(bandaUsuario, usuario);
+
+            return ResponseEntity.ok("Usuario adicionado com sucesso!");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
