@@ -31,11 +31,11 @@ public class BandaServiceImpl implements IBandaService {
         banda.setIdResponsavel(usuario.getIdUsuario());
         Banda bandaSalva = bandaRepository.save(banda);
 
+        //Adicionando o próprio responsável na banda
         BandaUsuario bandaUsuario = BandaUsuario.builder()
                 .idBanda(bandaSalva.getIdBanda())
                 .idUsuario(usuario.getIdUsuario())
                 .build();
-        //adicionarUsuario(bandaUsuario, usuario);
         bandaUsuarioRepository.save(bandaUsuario);
 
         return bandaSalva;
@@ -51,7 +51,7 @@ public class BandaServiceImpl implements IBandaService {
             throw new IllegalStateException("Apenas o responsável pela banda pode adicionar usuários.");
         }
 
-        Usuario usuarioMusico = usuarioRepository.findById(bandaUsuario.getIdUsuario())
+        usuarioRepository.findById(bandaUsuario.getIdUsuario())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
         if (bandaUsuarioRepository.existsByIdBandaAndIdUsuario(bandaUsuario.getIdBanda(), bandaUsuario.getIdUsuario())) {

@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.controller;
 
+import br.com.ifs.spring1.model.RepertorioMusica;
 import br.com.ifs.spring1.model.Repertorios;
 import br.com.ifs.spring1.model.Usuario;
 import br.com.ifs.spring1.service.IBandaService;
@@ -31,6 +32,19 @@ public class RepertoriosController {
             repertoriosService.cadastrar(repertorio,usuario);
 
             return ResponseEntity.ok("Repertório adicionado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/adicionarMusica")
+    public Object adicionarMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
+        try {
+            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+
+            repertoriosService.adicionarMusica(repertorioMusica,usuario);
+
+            return ResponseEntity.ok("Música adicionada no repertório!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
