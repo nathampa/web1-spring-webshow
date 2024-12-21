@@ -7,6 +7,7 @@ import br.com.ifs.spring1.service.IRepertoriosService;
 import br.com.ifs.spring1.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +24,15 @@ public class RepertoriosController {
     }
 
     @PostMapping("/cadastrarRepertorio")
-    public ResponseEntity<Repertorios> cadastrar(@RequestBody Repertorios repertorio, HttpSession sessao) {
+    public Object cadastrar(@RequestBody Repertorios repertorio, HttpSession sessao) {
         try {
             Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
-            Repertorios novoRepertorio = repertoriosService.cadastrar(repertorio,usuario);
-            return ResponseEntity.ok(novoRepertorio);
+
+            repertoriosService.cadastrar(repertorio,usuario);
+
+            return ResponseEntity.ok("Repertório adicionado com sucesso!");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

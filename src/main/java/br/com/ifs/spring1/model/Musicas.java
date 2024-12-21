@@ -21,5 +21,5 @@ public class Musicas {
     private String titulo;
 
     @Column(name = "arquivo_pdf")
-    private String senha;
+    private String arquivoPdf;
 }
