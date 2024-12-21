@@ -29,7 +29,16 @@ public class BandaServiceImpl implements IBandaService {
     @Override
     public Banda cadastrar(Banda banda, Usuario usuario) {
         banda.setIdResponsavel(usuario.getIdUsuario());
-        return bandaRepository.save(banda);
+        Banda bandaSalva = bandaRepository.save(banda);
+
+        BandaUsuario bandaUsuario = BandaUsuario.builder()
+                .idBanda(bandaSalva.getIdBanda())
+                .idUsuario(usuario.getIdUsuario())
+                .build();
+        //adicionarUsuario(bandaUsuario, usuario);
+        bandaUsuarioRepository.save(bandaUsuario);
+
+        return bandaSalva;
     }
 
     @Override
