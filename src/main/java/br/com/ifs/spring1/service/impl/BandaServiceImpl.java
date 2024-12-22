@@ -48,7 +48,7 @@ public class BandaServiceImpl implements IBandaService {
                 .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
 
         if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
-            throw new IllegalStateException("Apenas o responsável pela banda pode adicionar usuários.");
+            throw new UnauthorizedAccessException("Usuário não autorizado");
         }
 
         usuarioRepository.findById(bandaUsuario.getIdUsuario())

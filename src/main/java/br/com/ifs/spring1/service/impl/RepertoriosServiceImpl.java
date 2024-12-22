@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.service.impl;
 
+import br.com.ifs.spring1.exception.UnauthorizedAccessException;
 import br.com.ifs.spring1.model.*;
 import br.com.ifs.spring1.repository.*;
 import br.com.ifs.spring1.service.IRepertoriosService;
@@ -30,7 +31,7 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
         .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
 
         if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
-            throw new IllegalStateException("Apenas o responsável pela banda pode criar repertórios.");
+            throw new UnauthorizedAccessException("Usuário não autorizado");
         }
 
         return repertorioRepository.save(repertorio);
@@ -48,7 +49,7 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
 
         //Checa se o usuário é o responsável pela banda
         if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
-            throw new IllegalStateException("Apenas o responsável pela banda pode adicionar músicas ao repertório.");
+            throw new UnauthorizedAccessException("Usuário não autorizado");
         }
 
         //Checa se a música existe
