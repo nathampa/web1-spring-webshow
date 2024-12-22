@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface IRepertoriosService {
     List<Repertorios> getAll();
-
+    List<RepertorioMusica> getAllMusicas();
     Repertorios cadastrar(Repertorios repertorio, Usuario usuario);
     RepertorioMusica adicionarMusica(RepertorioMusica repertorioMusica, Usuario usuario);
+    void excluirMusica(RepertorioMusica repertorioMusica, Usuario usuario);
+    void ativarMusica(RepertorioMusica repertorioMusica, Usuario usuario);
     void excluir(Integer idRepertorio, Usuario usuario);
 
 }

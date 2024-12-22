@@ -25,6 +25,10 @@ public class BandaServiceImpl implements IBandaService {
     public List<Banda> getAll() {
         return bandaRepository.findAll();
     }
+    @Override
+    public List<BandaUsuario> getAllMusicos() {
+        return bandaUsuarioRepository.findAll();
+    }
 
     @Override
     public Banda cadastrar(Banda banda, Usuario usuario) {
@@ -58,11 +62,27 @@ public class BandaServiceImpl implements IBandaService {
             throw new IllegalStateException("Usuário já está associado a esta banda.");
         }
 
-
-        bandaUsuario.setIdBanda(bandaUsuario.getIdBanda());
-        bandaUsuario.setIdUsuario(bandaUsuario.getIdUsuario());
-
         return bandaUsuarioRepository.save(bandaUsuario);
+    }
+
+    @Override
+    public void removerUsuario(BandaUsuario bandaUsuario, Usuario usuario) {
+        //Checa se a banda existe
+        Banda banda = bandaRepository.findById(bandaUsuario.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
+            throw new UnauthorizedAccessException("Usuário não autorizado");
+        }
+
+        usuarioRepository.findById(bandaUsuario.getIdUsuario())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+        if (!bandaUsuarioRepository.existsByIdBandaAndIdUsuario(bandaUsuario.getIdBanda(), bandaUsuario.getIdUsuario())) {
+            throw new IllegalStateException("Usuário não se encontra na banda.");
+        }
+
+        bandaUsuarioRepository.deleteByIdBandaAndIdUsuario(bandaUsuario.getIdBanda(), bandaUsuario.getIdUsuario());
     }
 
     @Override

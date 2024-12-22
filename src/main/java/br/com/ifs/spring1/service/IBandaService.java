@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface IBandaService {
     List<Banda> getAll();
+    List<BandaUsuario> getAllMusicos();
     //List<Banda> getByNomeLike(String nome);
-
     Banda cadastrar(Banda banda, Usuario usuario);
-
     BandaUsuario adicionarUsuario(BandaUsuario bandaUsuario, Usuario usuario);
+    void removerUsuario(BandaUsuario bandaUsuario, Usuario usuario);
     void excluir(Integer idBanda, Usuario usuario);
 }

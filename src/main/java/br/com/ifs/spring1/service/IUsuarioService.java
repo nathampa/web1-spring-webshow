@@ -8,9 +8,7 @@ import java.util.List;
 public interface IUsuarioService {
     List<Usuario> getAll();
     //List<Usuario> getByNomeLike(String nome);
-
     Usuario cadastrar(Usuario usuario);
-
     void excluir(Integer idUsuario);
     Usuario getAuthenticatedUser(HttpSession sessao);
 }

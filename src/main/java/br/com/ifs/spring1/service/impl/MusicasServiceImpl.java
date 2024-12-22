@@ -25,6 +25,6 @@ public class MusicasServiceImpl implements IMusicasService {
 
     @Override
     public void excluir(Integer idMusica) {
-
+        musicasRepository.deleteById(idMusica);
     }
 }

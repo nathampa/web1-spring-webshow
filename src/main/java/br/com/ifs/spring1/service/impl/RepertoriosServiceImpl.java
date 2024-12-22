@@ -25,6 +25,12 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
     public List<Repertorios> getAll() {
         return repertorioRepository.findAll();
     }
+
+    @Override
+    public List<RepertorioMusica> getAllMusicas() {
+        return repertorioMusicaRepository.findAll();
+    }
+
     @Override
     public Repertorios cadastrar(Repertorios repertorio, Usuario usuario) {
         Banda banda = bandaRepository.findById(repertorio.getIdBanda())
@@ -61,16 +67,60 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
             throw new IllegalStateException("Música já está associada a este repertório.");
         }
 
+
         return repertorioMusicaRepository.save(repertorioMusica);
     }
 
     @Override
-    public void excluir(Integer idRepertorio, Usuario usuario) {
-        Optional<Repertorios> repertorio = repertorioRepository.findById(idRepertorio);
-        if (repertorio.isPresent()) {
-            repertorioRepository.deleteById(idRepertorio);
-        } else {
-            throw new IllegalArgumentException("Repertório com ID " + idRepertorio + " não encontrado.");
+    public void excluirMusica(RepertorioMusica repertorioMusica, Usuario usuario) {
+        Repertorios repertorio = repertorioRepository.findById(repertorioMusica.getIdRepertorio())
+                .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
+
+        Banda banda = bandaRepository.findById(repertorio.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
+            throw new UnauthorizedAccessException("Usuário não autorizado");
         }
+
+        int registrosAtualizados = repertorioMusicaRepository.excluirLogicamente(repertorioMusica.getIdMusica(), repertorioMusica.getIdRepertorio());
+
+        if (registrosAtualizados == 0) {
+            throw new EntityNotFoundException("Música ou Repertório não encontrados.");
+        }
+    }
+
+    @Override
+    public void ativarMusica(RepertorioMusica repertorioMusica, Usuario usuario) {
+        Repertorios repertorio = repertorioRepository.findById(repertorioMusica.getIdRepertorio())
+                .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
+
+        Banda banda = bandaRepository.findById(repertorio.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
+            throw new UnauthorizedAccessException("Usuário não autorizado");
+        }
+
+        int registrosAtualizados = repertorioMusicaRepository.ativarMusica(repertorioMusica.getIdMusica(), repertorioMusica.getIdRepertorio());
+
+        if (registrosAtualizados == 0) {
+            throw new EntityNotFoundException("Música ou Repertório não encontrados.");
+        }
+    }
+
+    @Override
+    public void excluir(Integer idRepertorio, Usuario usuario) {
+        Repertorios repertorio = repertorioRepository.findById(idRepertorio)
+                .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
+
+        Banda banda = bandaRepository.findById(repertorio.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
+            throw new UnauthorizedAccessException("Usuário não autorizado");
+        }
+
+        repertorioRepository.deleteById(idRepertorio);
     }
 }

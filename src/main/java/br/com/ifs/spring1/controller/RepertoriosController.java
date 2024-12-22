@@ -24,6 +24,11 @@ public class RepertoriosController {
         return repertoriosService.getAll();
     }
 
+    @GetMapping("/listarMusicas")
+    public Object getAllMusicas(){
+        return repertoriosService.getAllMusicas();
+    }
+
     @PostMapping("/cadastrarRepertorio")
     public Object cadastrar(@RequestBody Repertorios repertorio, HttpSession sessao) {
         try {
@@ -50,14 +55,42 @@ public class RepertoriosController {
         }
     }
 
-    @DeleteMapping("/excluir/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Integer id,HttpSession sessao) {
+    @PostMapping("/ativarMusica")
+    public Object ativarMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
         try {
             Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
-            repertoriosService.excluir(id,usuario);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+
+            repertoriosService.ativarMusica(repertorioMusica,usuario);
+
+            return ResponseEntity.ok("Música adicionada ao repertório!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/excluirMusica")
+    public Object excluirMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
+        try {
+            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+
+            repertoriosService.excluirMusica(repertorioMusica,usuario);
+
+            return ResponseEntity.ok("Música excluida do repertório!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/excluir/{idRepertorio}")
+    public Object excluir(@PathVariable(name = "idRepertorio") Integer idRepertorio,HttpSession sessao) {
+        try {
+            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+
+            repertoriosService.excluir(idRepertorio,usuario);
+
+            return ResponseEntity.ok("Repertório excluido com sucesso!");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

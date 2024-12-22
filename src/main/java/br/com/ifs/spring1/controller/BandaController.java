@@ -27,6 +27,11 @@ public class BandaController {
         return bandaService.getAll();
     }
 
+    @GetMapping("/listarMusicos")
+    public Object getAllMusicos(){
+        return bandaService.getAllMusicos();
+    }
+
     @PostMapping("/cadastrarBanda")
     public Object cadastrar(@RequestBody Banda banda, HttpSession sessao) {
         try {
@@ -48,6 +53,19 @@ public class BandaController {
             bandaService.adicionarUsuario(bandaUsuario, usuario);
 
             return ResponseEntity.ok("Usuario adicionado com sucesso!");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/removerUsuario")
+    public Object removerUsuario(@RequestBody BandaUsuario bandaUsuario, HttpSession sessao){
+        try {
+            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+
+            bandaService.removerUsuario(bandaUsuario, usuario);
+
+            return ResponseEntity.ok("Usuario removido com sucesso!");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }

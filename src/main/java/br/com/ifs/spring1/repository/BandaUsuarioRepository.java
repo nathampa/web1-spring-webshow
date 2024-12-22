@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BandaUsuarioRepository extends JpaRepository<BandaUsuario, BandaUsuarioId> {
     boolean existsByIdBandaAndIdUsuario(Integer idBanda, Integer idUsuario);
+    void deleteByIdBandaAndIdUsuario(Integer idBanda, Integer idUsuario);
 }

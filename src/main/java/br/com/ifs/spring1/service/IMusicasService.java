@@ -9,6 +9,5 @@ import java.util.List;
 public interface IMusicasService {
     List<Musicas> getAll();
     Musicas cadastrar(Musicas musica);
-
     void excluir(Integer idMusica);
 }

@@ -17,7 +17,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
     public List<Usuario> getAll() {
         return usuarioRepository.findAll();
     }
-    //teste do teste
+
     /*@Override
     public List<Usuario> getByNomeLike(String nome) {
         return usuarioRepository.findByPerTxNomeLikeIgnoreCase("%" + nome + "%");
