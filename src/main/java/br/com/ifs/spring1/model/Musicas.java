@@ -22,4 +22,7 @@ public class Musicas {
 
     @Column(name = "arquivo_pdf")
     private String arquivoPdf;
+
+    @Column(name = "id_usuario")
+    private Integer idUsuario;
 }

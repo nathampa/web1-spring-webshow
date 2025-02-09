@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IMusicasService {
     List<Musicas> getAll();
-    Musicas cadastrar(Musicas musica);
+    Musicas cadastrar(Musicas musica, Usuario usuario);
     void excluir(Integer idMusica);
 }

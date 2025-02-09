@@ -1,7 +1,9 @@
 package br.com.ifs.spring1.service.impl;
 
 import br.com.ifs.spring1.model.Banda;
+import br.com.ifs.spring1.model.BandaUsuario;
 import br.com.ifs.spring1.model.Musicas;
+import br.com.ifs.spring1.model.Usuario;
 import br.com.ifs.spring1.repository.MusicasRepository;
 import br.com.ifs.spring1.service.IMusicasService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,8 @@ public class MusicasServiceImpl implements IMusicasService {
     }
 
     @Override
-    public Musicas cadastrar(Musicas musica) {
+    public Musicas cadastrar(Musicas musica, Usuario usuario) {
+        musica.setIdUsuario(usuario.getIdUsuario());
         return musicasRepository.save(musica);
     }
 
