@@ -9,6 +9,7 @@ public interface IUsuarioService {
     List<Usuario> getAll();
     //List<Usuario> getByNomeLike(String nome);
     Usuario cadastrar(Usuario usuario);
+    Usuario findByLogin(String login);
     void excluir(Integer idUsuario);
     Usuario getAuthenticatedUser(HttpSession sessao);
 }

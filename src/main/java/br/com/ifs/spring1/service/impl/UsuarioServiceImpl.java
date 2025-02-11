@@ -34,9 +34,15 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
 
     @Override
+    public Usuario findByLogin(String login) {
+        return usuarioRepository.findByLogin(login);
+    }
+
+    @Override
     public void excluir(Integer idUsuario) {
         usuarioRepository.deleteById(idUsuario);
     }
+
 
     @Override
     public Usuario getAuthenticatedUser(HttpSession sessao){
@@ -45,7 +51,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
             throw new IllegalStateException("Usuário não autenticado.");
         }
 
-        return usuarioRepository.findByLogin(login)
-                .orElseThrow(() -> new IllegalStateException("Usuário não encontrado."));
+        return usuarioRepository.findByLogin(login);
+                //.orElseThrow(() -> new IllegalStateException("Usuário não encontrado."));
     }
 }

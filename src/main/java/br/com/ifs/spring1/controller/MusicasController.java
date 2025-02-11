@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,9 +25,9 @@ public class MusicasController {
     }
 
     @PostMapping("/cadastrarMusica")
-    public Object cadastrar(@RequestBody Musicas musica, HttpSession sessao) {
+    public Object cadastrar(@RequestBody Musicas musica, Authentication authentication) {
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             musicasService.cadastrar(musica, usuario);
 

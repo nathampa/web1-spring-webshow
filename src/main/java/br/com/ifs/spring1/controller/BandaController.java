@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class BandaController {
     private final IBandaService bandaService;
     private final IUsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping
     public Object getAll(){
@@ -33,9 +35,9 @@ public class BandaController {
     }
 
     @PostMapping("/cadastrarBanda")
-    public Object cadastrar(@RequestBody Banda banda, HttpSession sessao) {
+    public Object cadastrar(@RequestBody Banda banda, Authentication authentication) {
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             bandaService.cadastrar(banda, usuario);
 
@@ -46,9 +48,9 @@ public class BandaController {
     }
 
     @PostMapping("/adicionarUsuario")
-    public Object adicionarUsuario(@RequestBody BandaUsuario bandaUsuario, HttpSession sessao){
+    public Object adicionarUsuario(@RequestBody BandaUsuario bandaUsuario, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             bandaService.adicionarUsuario(bandaUsuario, usuario);
 
@@ -59,9 +61,9 @@ public class BandaController {
     }
 
     @DeleteMapping("/removerUsuario")
-    public Object removerUsuario(@RequestBody BandaUsuario bandaUsuario, HttpSession sessao){
+    public Object removerUsuario(@RequestBody BandaUsuario bandaUsuario, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             bandaService.removerUsuario(bandaUsuario, usuario);
 
@@ -72,9 +74,9 @@ public class BandaController {
     }
 
     @DeleteMapping(value = "/excluirBanda/{idBanda}")
-    public Object excluir (@PathVariable(name = "idBanda") Integer idBanda, HttpSession sessao){
+    public Object excluir (@PathVariable(name = "idBanda") Integer idBanda, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             bandaService.excluir(idBanda, usuario);
 

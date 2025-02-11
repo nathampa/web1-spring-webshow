@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,9 +31,9 @@ public class RepertoriosController {
     }
 
     @PostMapping("/cadastrarRepertorio")
-    public Object cadastrar(@RequestBody Repertorios repertorio, HttpSession sessao) {
+    public Object cadastrar(@RequestBody Repertorios repertorio, Authentication authentication) {
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             repertoriosService.cadastrar(repertorio,usuario);
 
@@ -43,9 +44,9 @@ public class RepertoriosController {
     }
 
     @PostMapping("/adicionarMusica")
-    public Object adicionarMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
+    public Object adicionarMusica(@RequestBody RepertorioMusica repertorioMusica, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             repertoriosService.adicionarMusica(repertorioMusica,usuario);
 
@@ -56,9 +57,9 @@ public class RepertoriosController {
     }
 
     @PostMapping("/ativarMusica")
-    public Object ativarMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
+    public Object ativarMusica(@RequestBody RepertorioMusica repertorioMusica, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             repertoriosService.ativarMusica(repertorioMusica,usuario);
 
@@ -69,9 +70,9 @@ public class RepertoriosController {
     }
 
     @DeleteMapping("/excluirMusica")
-    public Object excluirMusica(@RequestBody RepertorioMusica repertorioMusica, HttpSession sessao){
+    public Object excluirMusica(@RequestBody RepertorioMusica repertorioMusica, Authentication authentication){
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             repertoriosService.excluirMusica(repertorioMusica,usuario);
 
@@ -82,9 +83,9 @@ public class RepertoriosController {
     }
 
     @DeleteMapping("/excluir/{idRepertorio}")
-    public Object excluir(@PathVariable(name = "idRepertorio") Integer idRepertorio,HttpSession sessao) {
+    public Object excluir(@PathVariable(name = "idRepertorio") Integer idRepertorio, Authentication authentication) {
         try {
-            Usuario usuario = usuarioService.getAuthenticatedUser(sessao);
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
 
             repertoriosService.excluir(idRepertorio,usuario);
 
