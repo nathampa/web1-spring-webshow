@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("banda")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class BandaController {
     private final IBandaService bandaService;
     private final IUsuarioService usuarioService;
@@ -32,6 +34,19 @@ public class BandaController {
     @GetMapping("/listarMusicos")
     public Object getAllMusicos(){
         return bandaService.getAllMusicos();
+    }
+
+    @GetMapping("/getBandasUsuario")
+    public Object getBandasUsuario(Authentication authentication){
+        try {
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
+
+            List<Banda> bandas = bandaService.findBandasByUsuarioIdOrderByNome(usuario.getIdUsuario());
+
+            return ResponseEntity.ok(bandas);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     @PostMapping("/cadastrarBanda")

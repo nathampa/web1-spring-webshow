@@ -12,6 +12,7 @@ import br.com.ifs.spring1.service.IBandaService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class BandaServiceImpl implements IBandaService {
     @Override
     public List<BandaUsuario> getAllMusicos() {
         return bandaUsuarioRepository.findAll();
+    }
+
+    @Override
+    public List<Banda> findBandasByUsuarioIdOrderByNome(Integer idUsuario) {
+        return bandaUsuarioRepository.findBandasByUsuarioIdOrderByNome(idUsuario);
     }
 
     @Override

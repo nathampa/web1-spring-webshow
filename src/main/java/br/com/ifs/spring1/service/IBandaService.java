@@ -10,6 +10,7 @@ import java.util.List;
 public interface IBandaService {
     List<Banda> getAll();
     List<BandaUsuario> getAllMusicos();
+    List<Banda> findBandasByUsuarioIdOrderByNome(Integer idUsuario);
     //List<Banda> getByNomeLike(String nome);
     Banda cadastrar(Banda banda, Usuario usuario);
     BandaUsuario adicionarUsuario(BandaUsuario bandaUsuario, Usuario usuario);
