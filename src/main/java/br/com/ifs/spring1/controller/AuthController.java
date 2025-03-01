@@ -21,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
     private final UsuarioRepository usuarioRepository;
     private final JwtUtil jwtUtil;
