@@ -7,6 +7,7 @@ import br.com.ifs.spring1.model.Usuario;
 import br.com.ifs.spring1.repository.UsuarioRepository;
 import br.com.ifs.spring1.security.JwtUtil;
 import br.com.ifs.spring1.service.IAuthService;
+import br.com.ifs.spring1.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,12 +30,19 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final IAuthService authService;
+    private final IUsuarioService usuarioService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             String token = authService.autenticar(loginRequest.getLogin(), loginRequest.getSenha());
-            return ResponseEntity.ok(new JwtResponse(token));
+            Usuario usuario = usuarioService.findByLogin(loginRequest.getLogin());
+
+            // Retorna o token e o ID do usuário
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "userId", usuario.getIdUsuario()
+            ));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
