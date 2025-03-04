@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.service.impl;
 
+import br.com.ifs.spring1.controller.dto.UsuarioDTO;
 import br.com.ifs.spring1.exception.UnauthorizedAccessException;
 import br.com.ifs.spring1.model.Banda;
 import br.com.ifs.spring1.model.BandaUsuario;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,19 @@ public class BandaServiceImpl implements IBandaService {
     @Override
     public List<BandaUsuario> getAllMusicos() {
         return bandaUsuarioRepository.findAll();
+    }
+
+    @Override
+    public List<UsuarioDTO> getMusicosByBanda(Integer idBanda) {
+        List<Integer> usuarioIds = bandaUsuarioRepository.findByIdBanda(idBanda)
+                .stream()
+                .map(BandaUsuario::getIdUsuario)
+                .collect(Collectors.toList());
+
+        return usuarioRepository.findAllById(usuarioIds)
+                .stream()
+                .map(usuario -> new UsuarioDTO(usuario.getIdUsuario(), usuario.getNome(), usuario.getLogin()))
+                .collect(Collectors.toList());
     }
 
     @Override

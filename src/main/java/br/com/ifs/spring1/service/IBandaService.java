@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.service;
 
+import br.com.ifs.spring1.controller.dto.UsuarioDTO;
 import br.com.ifs.spring1.model.Banda;
 import br.com.ifs.spring1.model.BandaUsuario;
 import br.com.ifs.spring1.model.BandaUsuarioId;
@@ -10,6 +11,7 @@ import java.util.List;
 public interface IBandaService {
     List<Banda> getAll();
     List<BandaUsuario> getAllMusicos();
+    List<UsuarioDTO> getMusicosByBanda(Integer idBanda);
     List<Banda> findBandasByUsuarioIdOrderByNome(Integer idUsuario);
     //List<Banda> getByNomeLike(String nome);
     Banda cadastrar(Banda banda, Usuario usuario);

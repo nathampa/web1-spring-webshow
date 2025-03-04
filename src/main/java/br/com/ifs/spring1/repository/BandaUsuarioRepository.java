@@ -16,9 +16,12 @@ import java.util.List;
 @Repository
 public interface BandaUsuarioRepository extends JpaRepository<BandaUsuario, BandaUsuarioId> {
     boolean existsByIdBandaAndIdUsuario(Integer idBanda, Integer idUsuario);
+
+    List<BandaUsuario> findByIdBanda(Integer idBanda);
     @Modifying
     @Transactional
     void deleteByIdBandaAndIdUsuario(Integer idBanda, Integer idUsuario);
+
     /*@Query(value = "SELECT b FROM bandas b WHERE b.id_banda IN (SELECT bu.id_banda FROM banda_usuario bu WHERE bu.id_usuario = :usuarioId) ORDER BY b.nome ASC",
             nativeQuery = true)
     List<Banda> findBandasByUsuarioIdOrderByNome(@Param("usuarioId") Integer usuarioId);*/

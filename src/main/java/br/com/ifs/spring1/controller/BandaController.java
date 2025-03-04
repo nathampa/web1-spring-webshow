@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.controller;
 
+import br.com.ifs.spring1.controller.dto.UsuarioDTO;
 import br.com.ifs.spring1.model.Banda;
 import br.com.ifs.spring1.model.BandaUsuario;
 import br.com.ifs.spring1.model.BandaUsuarioId;
@@ -31,9 +32,20 @@ public class BandaController {
         return bandaService.getAll();
     }
 
-    @GetMapping("/listarMusicos")
+    @GetMapping("/listarTodosMusicos")
     public Object getAllMusicos(){
         return bandaService.getAllMusicos();
+    }
+
+    @GetMapping("/{idBanda}/listarMusicos")
+    public Object getMusicosByBanda(@PathVariable Integer idBanda){
+        List<UsuarioDTO> usuarios = bandaService.getMusicosByBanda(idBanda);
+
+        if (usuarios.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/getBandasUsuario")
