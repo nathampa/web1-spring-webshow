@@ -35,6 +35,10 @@ public class BandaServiceImpl implements IBandaService {
 
     @Override
     public List<UsuarioDTO> getMusicosByBanda(Integer idBanda) {
+        //Checa se a banda existe
+        bandaRepository.findById(idBanda)
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
         List<Integer> usuarioIds = bandaUsuarioRepository.findByIdBanda(idBanda)
                 .stream()
                 .map(BandaUsuario::getIdUsuario)
