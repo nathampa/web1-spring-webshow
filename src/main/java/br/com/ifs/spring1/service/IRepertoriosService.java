@@ -8,6 +8,7 @@ public interface IRepertoriosService {
     List<Repertorios> getAll();
     List<RepertorioMusica> getAllMusicas();
     List<Repertorios> getRepertoriosByBanda(Integer idBanda);
+    List<Musicas> getMusicasByRepertorio(Integer idRepertorio);
     Repertorios cadastrar(Repertorios repertorio, Usuario usuario);
     RepertorioMusica adicionarMusica(RepertorioMusica repertorioMusica, Usuario usuario);
     void excluirMusica(RepertorioMusica repertorioMusica, Usuario usuario);

@@ -43,6 +43,25 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
     }
 
     @Override
+    public List<Musicas> getMusicasByRepertorio(Integer idRepertorio) {
+        //Checa se o repertorio existe
+        Repertorios repertorio = repertorioRepository.findById(idRepertorio)
+                .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
+
+        //Checa se a banda existe
+        Banda banda = bandaRepository.findById(repertorio.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        List<Integer> musicasIds = repertorioMusicaRepository.findByIdRepertorio(idRepertorio)
+                .stream()
+                .map(RepertorioMusica::getIdMusica)
+                .collect(Collectors.toList());
+
+
+        return musicaRepository.findAllById(musicasIds);
+    }
+
+    @Override
     public Repertorios cadastrar(Repertorios repertorio, Usuario usuario) {
         Banda banda = bandaRepository.findById(repertorio.getIdBanda())
         .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));

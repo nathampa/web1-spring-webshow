@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.controller;
 
+import br.com.ifs.spring1.model.Musicas;
 import br.com.ifs.spring1.model.RepertorioMusica;
 import br.com.ifs.spring1.model.Repertorios;
 import br.com.ifs.spring1.model.Usuario;
@@ -42,6 +43,18 @@ public class RepertoriosController {
 
         return ResponseEntity.ok(repertorios);
      }
+
+     @GetMapping("/listarMusicasRepertorio/{idRepertorio}")
+     public Object getMusicasByRepertorio(@PathVariable Integer idRepertorio){
+        List<Musicas> musicas = repertoriosService.getMusicasByRepertorio(idRepertorio);
+
+         if (musicas.isEmpty()){
+             return ResponseEntity.notFound().build();
+         }
+
+         return ResponseEntity.ok(musicas);
+     }
+
 
     @PostMapping("/cadastrarRepertorio")
     public Object cadastrar(@RequestBody Repertorios repertorio, Authentication authentication) {
