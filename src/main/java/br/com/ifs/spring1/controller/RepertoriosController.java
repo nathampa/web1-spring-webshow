@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("repertorios")
 @RequiredArgsConstructor
@@ -29,6 +31,17 @@ public class RepertoriosController {
     public Object getAllMusicas(){
         return repertoriosService.getAllMusicas();
     }
+
+    @GetMapping("/listarRepertorios/{idBanda}")
+    public Object getRepertoriosByBanda(@PathVariable Integer idBanda){
+        List<Repertorios> repertorios = repertoriosService.getRepertoriosByBanda(idBanda);
+
+        if (repertorios.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(repertorios);
+     }
 
     @PostMapping("/cadastrarRepertorio")
     public Object cadastrar(@RequestBody Repertorios repertorio, Authentication authentication) {

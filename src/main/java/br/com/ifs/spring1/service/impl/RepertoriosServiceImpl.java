@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.service.impl;
 
+import br.com.ifs.spring1.controller.dto.UsuarioDTO;
 import br.com.ifs.spring1.exception.UnauthorizedAccessException;
 import br.com.ifs.spring1.model.*;
 import br.com.ifs.spring1.repository.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,15 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
     @Override
     public List<RepertorioMusica> getAllMusicas() {
         return repertorioMusicaRepository.findAll();
+    }
+
+    @Override
+    public List<Repertorios> getRepertoriosByBanda(Integer idBanda) {
+        //Checa se a banda existe
+        bandaRepository.findById(idBanda)
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        return repertorioRepository.findByIdBanda(idBanda);
     }
 
     @Override
