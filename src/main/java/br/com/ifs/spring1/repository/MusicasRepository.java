@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface MusicasRepository extends JpaRepository<Musicas, Integer> {
-
+    List<Musicas> findByIdUsuario(Integer idUsuario); // Busca músicas pelo ID do usuário
 }
+
+

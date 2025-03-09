@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("musicas")
 @RequiredArgsConstructor
@@ -45,6 +47,22 @@ public class MusicasController {
             return ResponseEntity.ok("Música excluida com sucesso!");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/minhasMusicas")
+    public ResponseEntity<?> getMusicasDoUsuario(Authentication authentication) {
+        try {
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
+            List<Musicas> musicas = musicasService.getMusicasDoUsuario(usuario.getIdUsuario());
+
+            if (musicas.isEmpty()) {
+                return ResponseEntity.ok("Nenhuma música encontrada para este usuário.");
+            }
+
+            return ResponseEntity.ok(musicas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar músicas.");
         }
     }
 }

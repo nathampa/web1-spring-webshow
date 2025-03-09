@@ -30,4 +30,9 @@ public class MusicasServiceImpl implements IMusicasService {
     public void excluir(Integer idMusica) {
         musicasRepository.deleteById(idMusica);
     }
+
+    @Override
+    public List<Musicas> getMusicasDoUsuario(Integer idUsuario) {
+        return musicasRepository.findByIdUsuario(idUsuario);
+    }
 }
