@@ -2,6 +2,7 @@ package br.com.ifs.spring1.controller;
 
 import br.com.ifs.spring1.model.Musicas;
 import br.com.ifs.spring1.model.Usuario;
+import br.com.ifs.spring1.service.IArquivoService;
 import br.com.ifs.spring1.service.IMusicasService;
 import br.com.ifs.spring1.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -11,7 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -20,6 +26,7 @@ import java.util.List;
 public class MusicasController {
     private final IMusicasService musicasService;
     private final IUsuarioService usuarioService;
+    private final IArquivoService arquivoService;
 
     @GetMapping
     public Object getAll(){
@@ -27,15 +34,26 @@ public class MusicasController {
     }
 
     @PostMapping("/cadastrarMusica")
-    public Object cadastrar(@RequestBody Musicas musica, Authentication authentication) {
+    public Object cadastrar(@RequestParam("titulo") String titulo, @RequestPart("arquivoPdf") MultipartFile arquivoPdf, Authentication authentication) {
         try {
             Usuario usuario = usuarioService.findByLogin(authentication.getName());
+
+            //Salva arquivo e obtem o caminho
+            String caminhoArquivo = arquivoService.salvarArquivo(arquivoPdf);
+
+            //Cria a entidade Musicas e salva o caminho no banco
+            Musicas musica = new Musicas();
+            musica.setTitulo(titulo);
+            musica.setArquivoPdf(caminhoArquivo); //Caminho do arquivo
 
             musicasService.cadastrar(musica, usuario);
 
             return ResponseEntity.ok("Música cadastrada com sucesso!");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao salvar arquivo: " + e.getMessage());
         }
     }
 
@@ -51,7 +69,7 @@ public class MusicasController {
     }
 
     @GetMapping("/minhasMusicas")
-    public ResponseEntity<?> getMusicasDoUsuario(Authentication authentication) {
+    public Object getMusicasDoUsuario(Authentication authentication) {
         try {
             Usuario usuario = usuarioService.findByLogin(authentication.getName());
             List<Musicas> musicas = musicasService.getMusicasDoUsuario(usuario.getIdUsuario());
