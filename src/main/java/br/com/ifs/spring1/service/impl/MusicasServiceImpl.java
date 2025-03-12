@@ -35,4 +35,9 @@ public class MusicasServiceImpl implements IMusicasService {
     public List<Musicas> getMusicasDoUsuario(Integer idUsuario) {
         return musicasRepository.findByIdUsuario(idUsuario);
     }
+
+    @Override
+    public Musicas findByIdMusica(Integer idMusica) {
+        return musicasRepository.findByIdMusica(idMusica);
+    }
 }

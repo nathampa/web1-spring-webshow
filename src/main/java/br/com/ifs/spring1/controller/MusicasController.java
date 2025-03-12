@@ -8,7 +8,10 @@ import br.com.ifs.spring1.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.HttpParser;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +84,39 @@ public class MusicasController {
             return ResponseEntity.ok(musicas);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar músicas.");
+        }
+    }
+
+    @GetMapping("/baixarMusica/{idMusica}")
+    public Object baixarMusica(@PathVariable Integer idMusica) {
+        try {
+            // Buscar a música pelo ID
+            Musicas musica = musicasService.findByIdMusica(idMusica);
+
+            if (musica == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Obter o caminho do arquivo PDF
+            String caminhoArquivo = musica.getArquivoPdf();
+
+            // Criar um recurso a partir do arquivo
+            Resource resource = arquivoService.carregarComoResource(caminhoArquivo);
+
+            // Verificar se o arquivo existe
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Configurar o cabeçalho para download do arquivo
+            String nomeArquivo = musica.getTitulo() + ".pdf";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

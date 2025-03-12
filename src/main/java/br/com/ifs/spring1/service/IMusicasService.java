@@ -11,4 +11,5 @@ public interface IMusicasService {
     Musicas cadastrar(Musicas musica, Usuario usuario);
     void excluir(Integer idMusica);
     List<Musicas> getMusicasDoUsuario(Integer idUsuario);
+    Musicas findByIdMusica(Integer idMusica);
 }

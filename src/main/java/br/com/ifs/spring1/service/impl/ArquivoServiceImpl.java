@@ -3,9 +3,12 @@ package br.com.ifs.spring1.service.impl;
 import br.com.ifs.spring1.service.IArquivoService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,5 +32,21 @@ public class ArquivoServiceImpl implements IArquivoService {
 
         // Retorna o caminho salvo
         return filePath.toString();
+    }
+
+    @Override
+    public Resource carregarComoResource(String caminhoArquivo) {
+        try {
+            Path path = Paths.get(caminhoArquivo);
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Não foi possível ler o arquivo: " + caminhoArquivo);
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Erro ao carregar arquivo: " + e.getMessage());
+        }
     }
 }
