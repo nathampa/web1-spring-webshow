@@ -23,4 +23,6 @@ public class RepertorioMusica {
     private Integer idMusica;
 
     private Boolean status;
+
+    private Integer ordem;
 }

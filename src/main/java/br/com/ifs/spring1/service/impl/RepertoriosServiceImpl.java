@@ -153,4 +153,12 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
 
         repertorioRepository.deleteById(idRepertorio);
     }
+
+    @Override
+    public void atualizarOrdem(Integer idRepertorio, List<Integer> idsMusicas) {
+        int index = 1;
+        for (Integer idMusica : idsMusicas) {
+            repertorioMusicaRepository.atualizarOrdem(idRepertorio, idMusica, index++);
+        }
+    }
 }

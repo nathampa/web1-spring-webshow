@@ -26,4 +26,9 @@ public interface RepertorioMusicaRepository extends JpaRepository<RepertorioMusi
     @Transactional
     @Query("UPDATE RepertorioMusica rm SET rm.status = true WHERE rm.idRepertorio = :idRepertorio AND rm.idMusica = :idMusica")
     int ativarMusica(@Param("idMusica") Integer idMusica, @Param("idRepertorio") Integer idRepertorio);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE RepertorioMusica rm SET rm.ordem = :ordem WHERE rm.id.repertorioId = :idRepertorio AND rm.id.musicaId = :idMusica")
+    void atualizarOrdem(@Param("idRepertorio") Integer idRepertorio, @Param("idMusica") Integer idMusica, @Param("ordem") int ordem);
 }

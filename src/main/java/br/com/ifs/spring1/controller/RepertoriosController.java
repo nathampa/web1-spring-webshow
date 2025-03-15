@@ -1,5 +1,6 @@
 package br.com.ifs.spring1.controller;
 
+import br.com.ifs.spring1.controller.dto.AtualizarOrdemDTO;
 import br.com.ifs.spring1.model.Musicas;
 import br.com.ifs.spring1.model.RepertorioMusica;
 import br.com.ifs.spring1.model.Repertorios;
@@ -93,6 +94,12 @@ public class RepertoriosController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{idRepertorio}/ordem")
+    public ResponseEntity<Void> atualizarOrdem(@PathVariable Integer idRepertorio, @RequestBody AtualizarOrdemDTO dto) {
+        repertoriosService.atualizarOrdem(idRepertorio, dto.getIdsMusicas());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/excluirMusica")

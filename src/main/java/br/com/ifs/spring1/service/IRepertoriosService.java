@@ -14,5 +14,5 @@ public interface IRepertoriosService {
     void excluirMusica(RepertorioMusica repertorioMusica, Usuario usuario);
     void ativarMusica(RepertorioMusica repertorioMusica, Usuario usuario);
     void excluir(Integer idRepertorio, Usuario usuario);
-
+    void atualizarOrdem(Integer idRepertorio, List<Integer> idsMusicas);
 }
