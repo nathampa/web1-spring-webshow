@@ -97,8 +97,32 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
             throw new IllegalStateException("Música já está associada a este repertório.");
         }
 
+        Integer ordem = repertorioMusicaRepository.getNextOrdem(repertorioMusica.getIdRepertorio());
+        RepertorioMusica novaEntrada = new RepertorioMusica(repertorioMusica.getIdRepertorio(), repertorioMusica.getIdMusica(), true, ordem);
 
-        return repertorioMusicaRepository.save(repertorioMusica);
+        return repertorioMusicaRepository.save(novaEntrada);
+
+    }
+
+    @Override
+    public void desativarMusica(RepertorioMusica repertorioMusica, Usuario usuario) {
+        Repertorios repertorio = repertorioRepository.findById(repertorioMusica.getIdRepertorio())
+                .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
+
+        Banda banda = bandaRepository.findById(repertorio.getIdBanda())
+                .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
+
+        if(!banda.getIdResponsavel().equals(usuario.getIdUsuario())){
+            throw new UnauthorizedAccessException("Usuário não autorizado");
+        }
+
+        int registrosAtualizados = repertorioMusicaRepository.excluirLogicamente(repertorioMusica.getIdMusica(), repertorioMusica.getIdRepertorio());
+
+        reorganizarOrdem(repertorioMusica.getIdRepertorio());
+
+        if (registrosAtualizados == 0) {
+            throw new EntityNotFoundException("Música ou Repertório não encontrados.");
+        }
     }
 
     @Override
@@ -113,11 +137,8 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
             throw new UnauthorizedAccessException("Usuário não autorizado");
         }
 
-        int registrosAtualizados = repertorioMusicaRepository.excluirLogicamente(repertorioMusica.getIdMusica(), repertorioMusica.getIdRepertorio());
-
-        if (registrosAtualizados == 0) {
-            throw new EntityNotFoundException("Música ou Repertório não encontrados.");
-        }
+        repertorioMusicaRepository.excluirMusica(repertorioMusica.getIdRepertorio(), repertorioMusica.getIdMusica());
+        reorganizarOrdem(repertorioMusica.getIdRepertorio());
     }
 
     @Override
@@ -133,6 +154,7 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
         }
 
         int registrosAtualizados = repertorioMusicaRepository.ativarMusica(repertorioMusica.getIdMusica(), repertorioMusica.getIdRepertorio());
+        reorganizarOrdem(repertorioMusica.getIdRepertorio());
 
         if (registrosAtualizados == 0) {
             throw new EntityNotFoundException("Música ou Repertório não encontrados.");
@@ -160,5 +182,10 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
         for (Integer idMusica : idsMusicas) {
             repertorioMusicaRepository.atualizarOrdem(idRepertorio, idMusica, index++);
         }
+    }
+
+    private void reorganizarOrdem(Integer idRepertorio) {
+        List<RepertorioMusica> musicasAtivas = repertorioMusicaRepository.findAtivasByIdRepertorioOrderByOrdem(idRepertorio);
+        atualizarOrdem(idRepertorio, musicasAtivas.stream().map(RepertorioMusica::getIdMusica).collect(Collectors.toList()));
     }
 }

@@ -102,6 +102,20 @@ public class RepertoriosController {
         return ResponseEntity.ok().build();
     }
 
+
+    @DeleteMapping("/desativarMusica")
+    public Object desativarMusica(@RequestBody RepertorioMusica repertorioMusica, Authentication authentication){
+        try {
+            Usuario usuario = usuarioService.findByLogin(authentication.getName());
+
+            repertoriosService.desativarMusica(repertorioMusica,usuario);
+
+            return ResponseEntity.ok("Música desativada do repertório!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/excluirMusica")
     public Object excluirMusica(@RequestBody RepertorioMusica repertorioMusica, Authentication authentication){
         try {

@@ -2,6 +2,7 @@ package br.com.ifs.spring1.repository;
 
 import br.com.ifs.spring1.model.Musicas;
 import br.com.ifs.spring1.model.RepertorioMusica;
+import br.com.ifs.spring1.model.RepertorioMusicaId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,6 +30,18 @@ public interface RepertorioMusicaRepository extends JpaRepository<RepertorioMusi
 
     @Modifying
     @Transactional
-    @Query("UPDATE RepertorioMusica rm SET rm.ordem = :ordem WHERE rm.id.repertorioId = :idRepertorio AND rm.id.musicaId = :idMusica")
+    @Query("UPDATE RepertorioMusica rm SET rm.ordem = :ordem WHERE rm.id.idRepertorio = :idRepertorio AND rm.id.idMusica = :idMusica")
     void atualizarOrdem(@Param("idRepertorio") Integer idRepertorio, @Param("idMusica") Integer idMusica, @Param("ordem") int ordem);
+
+    @Query("SELECT COALESCE(MAX(rm.ordem), 0) + 1 FROM RepertorioMusica rm WHERE rm.id.idRepertorio = :idRepertorio")
+    int getNextOrdem(@Param("idRepertorio") Integer idRepertorio);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM RepertorioMusica rm WHERE rm.id.idRepertorio = :idRepertorio AND rm.id.idMusica = :idMusica")
+    void excluirMusica(@Param("idRepertorio") Integer idRepertorio, @Param("idMusica") Integer idMusica);
+
+
+    @Query("SELECT rm FROM RepertorioMusica rm WHERE rm.id.idRepertorio = :idRepertorio AND rm.status = true ORDER BY rm.ordem")
+    List<RepertorioMusica> findAtivasByIdRepertorioOrderByOrdem(@Param("idRepertorio") Integer idRepertorio);
 }
