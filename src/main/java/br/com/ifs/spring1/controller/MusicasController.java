@@ -78,7 +78,7 @@ public class MusicasController {
             List<Musicas> musicas = musicasService.getMusicasDoUsuario(usuario.getIdUsuario());
 
             if (musicas.isEmpty()) {
-                return ResponseEntity.ok("Nenhuma música encontrada para este usuário.");
+                return ResponseEntity.notFound().build();
             }
 
             return ResponseEntity.ok(musicas);
