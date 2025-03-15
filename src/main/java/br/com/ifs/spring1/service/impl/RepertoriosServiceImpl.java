@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
     }
 
     @Override
-    public List<Musicas> getMusicasByRepertorio(Integer idRepertorio) {
+    public List<Map<String, Object>> getMusicasByRepertorio(Integer idRepertorio) {
         //Checa se o repertorio existe
         Repertorios repertorio = repertorioRepository.findById(idRepertorio)
                 .orElseThrow(() -> new EntityNotFoundException("Repertório não encontrado"));
@@ -52,13 +53,7 @@ public class RepertoriosServiceImpl implements IRepertoriosService {
         Banda banda = bandaRepository.findById(repertorio.getIdBanda())
                 .orElseThrow(() -> new EntityNotFoundException("Banda não encontrada"));
 
-        List<Integer> musicasIds = repertorioMusicaRepository.findByIdRepertorio(idRepertorio)
-                .stream()
-                .map(RepertorioMusica::getIdMusica)
-                .collect(Collectors.toList());
-
-
-        return musicaRepository.findAllById(musicasIds);
+        return repertorioMusicaRepository.findMusicasWithStatusByRepertorioId(idRepertorio);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("repertorios")
@@ -47,13 +48,13 @@ public class RepertoriosController {
 
      @GetMapping("/listarMusicasRepertorio/{idRepertorio}")
      public Object getMusicasByRepertorio(@PathVariable Integer idRepertorio){
-        List<Musicas> musicas = repertoriosService.getMusicasByRepertorio(idRepertorio);
+         List<Map<String, Object>> resultado = repertoriosService.getMusicasByRepertorio(idRepertorio);
 
-         if (musicas.isEmpty()){
+         if (resultado.isEmpty()) {
              return ResponseEntity.notFound().build();
          }
 
-         return ResponseEntity.ok(musicas);
+         return ResponseEntity.ok(resultado);
      }
 
 

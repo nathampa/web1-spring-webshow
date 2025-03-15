@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface RepertorioMusicaRepository extends JpaRepository<RepertorioMusica, Integer> {
@@ -44,4 +45,9 @@ public interface RepertorioMusicaRepository extends JpaRepository<RepertorioMusi
 
     @Query("SELECT rm FROM RepertorioMusica rm WHERE rm.id.idRepertorio = :idRepertorio AND rm.status = true ORDER BY rm.ordem")
     List<RepertorioMusica> findAtivasByIdRepertorioOrderByOrdem(@Param("idRepertorio") Integer idRepertorio);
+
+    @Query("SELECT new map(m as musica, rm.status as status) FROM Musicas m " +
+            "JOIN RepertorioMusica rm ON m.id = rm.idMusica " +
+            "WHERE rm.idRepertorio = :idRepertorio")
+    List<Map<String, Object>> findMusicasWithStatusByRepertorioId(@Param("idRepertorio") Integer idRepertorio);
 }
