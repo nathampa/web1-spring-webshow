@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("repertorios")
@@ -56,6 +57,18 @@ public class RepertoriosController {
 
          return ResponseEntity.ok(resultado);
      }
+
+    @GetMapping("/listarMusicasAtivasRepertorio/{idRepertorio}")
+    public Object getMusicasAtivasByRepertorio(@PathVariable Integer idRepertorio){
+        List<Musicas> resultado = repertoriosService.getMusicasAtivasByRepertorio(idRepertorio);
+        System.out.println(resultado);
+
+        if (resultado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(resultado);
+    }
 
 
     @PostMapping("/cadastrarRepertorio")
