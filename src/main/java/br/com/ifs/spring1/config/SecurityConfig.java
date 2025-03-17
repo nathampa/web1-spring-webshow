@@ -56,6 +56,7 @@ public class SecurityConfig {
                 // Define as regras de autorização
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "/auth/registrar").permitAll() // endpoints públicos
+                        .requestMatchers("/live-session").permitAll()
                         .anyRequest().authenticated() // todos os outros requerem autenticação
                 )
 
